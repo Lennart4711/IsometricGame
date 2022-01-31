@@ -5,6 +5,7 @@ pygame.init()
 
 from blocks import *
 from window import Window
+import time
 
 class Game():
     def __init__(self):
@@ -24,37 +25,51 @@ class Game():
     def draw(self):
         self.win.display.fill((125,124, 110))
 
+        i = 0
+
         for row in self.buildings:
             for building in row:
-                building.draw(self.win.display, self.win.zoom, self.win.cart_to_iso([building.x, building.y]))
+                # Check if inside view
+                coords = self.win.cart_to_iso([building.x, building.y])
+                if (coords[0] >= -128 and coords[0] <= self.win.WIN_X + 128) and (
+                    coords[1] >= -128 and coords[1] <= self.win.WIN_Y + 128
+                ):
+                    start = time.time()
+                    # Why does it take so long with high zoom level
+                    building.draw(self.win.display, self.win.zoom, self.win.cart_to_iso([building.x, building.y]))
+                    i+=1
+
+                    print(time.time()-start)
+        
         pygame.display.flip()
 
     def input(self):
+        #---Mouse-dependent---
         for event in pygame.event.get():
             if(event.type == pygame.QUIT):
                 self.win.quit = True
             if(event.type == pygame.MOUSEBUTTONDOWN):
-                if event.button == 4 and self.win.zoom < self.win.MAX_ZOOM:
-                    self.win.resize(1.1, self.win.screen_to_world(pygame.mouse.get_pos()))
-                elif event.button == 5 and self.win.zoom > self.win.MIN_ZOOM:
-                    self.win.resize(0.9, self.win.screen_to_world(pygame.mouse.get_pos()))    
+                self.win.scroll(event.button)
                 
+        #---Key-dependent---   
         self.highlight()
         keys = pygame.key.get_pressed()   
         self.win.move(keys)
+        
 
     def highlight(self):
         for row in self.buildings:
             for building in row:
                 x,y = self.win.iso_to_cart(pygame.mouse.get_pos())
-                if building.x>x>building.x-32 and building.y>y>building.y-32:
-                    building.offset = 5
-                else: 
-                    building.offset = 0  
+                # Offset of 0*5 or 1*5, depends on condition
+                building.offset = (building.x>x>building.x-32 and building.y>y>building.y-32)*5
+                
 
     def update(self):
+
         self.draw()
         self.input()
+
         
     def run(self):
             while(not self.win.quit): 

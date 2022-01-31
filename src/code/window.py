@@ -4,9 +4,8 @@ class Window():
         self.win_x = 0
         self.win_y = 0
         self.zoom = 3
-        self.MIN_ZOOM = 0.035
-        self.MAX_ZOOM = 50
-        self.FIELD_SIZE = 2000
+        self.MIN_ZOOM = 1
+        self.MAX_ZOOM = 4
         self.WIN_X = 1000
         self.WIN_Y = 1000
         self.display = pygame.display.set_mode((self.WIN_X, self.WIN_Y))
@@ -23,14 +22,20 @@ class Window():
 
     def move(self, keys):
         if keys[pygame.K_LEFT]:
-                self.win_x -=2/self.zoom
+                self.win_x -=4*(self.zoom)/2
         elif keys[pygame.K_RIGHT]:
-                self.win_x +=2/self.zoom
+                self.win_x +=4*(self.zoom)/2
 
         if keys[pygame.K_UP]:
-                self.win_y -=2/self.zoom
+                self.win_y -=4*(self.zoom)/2
         elif keys[pygame.K_DOWN]:
-                self.win_y += 2/self.zoom
+                self.win_y += 4*(self.zoom)/2
+
+    def scroll(self,button):
+        if button == 4 and self.zoom < self.MAX_ZOOM:
+            self.resize(1.1, self.screen_to_world(pygame.mouse.get_pos()))
+        elif button == 5 and self.zoom > self.MIN_ZOOM:
+            self.resize(0.9, self.screen_to_world(pygame.mouse.get_pos()))    
 
     def screen_to_world(self, pos):
         x = pos[0]/self.zoom+self.win_x
