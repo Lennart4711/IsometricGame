@@ -2,7 +2,7 @@ from sprite import Sprite
 import pygame
 
 #grass = pygame.image.load('src\\assets\\default_grass.png').convert()
-path = "src\\assets\\blocks\\"
+path = "src/assets/blocks/"
 
 class Void(Sprite):
     def __init__(self,pos):
