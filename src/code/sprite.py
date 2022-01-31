@@ -11,7 +11,7 @@ class Sprite():
         self.offset = 0
         
 
-        self.img = pygame.image.load('src\\assets\\iso.png').convert_alpha()
+        self.img = None
 
 
     def draw(self, win, zoom, pos):
