@@ -10,7 +10,7 @@ import time
 class Game():
     def __init__(self):
         self.win = Window()
-      
+        # The position of a building in the list determines its drawing priority
         self.buildings = [[Farmland([x*32+32,y*32+32], self.win.zoom) if x%4!=0 else Tower([x*32+32,y*32+32], self.win.zoom) for x in range(6)]for y in range(12)]
         self.buildings[5][5] = Void([10,10])
         self.buildings[10][0] = Void([10,10])
@@ -25,8 +25,6 @@ class Game():
     def draw(self):
         self.win.display.fill((125,124, 110))
 
-        i = 0
-
         for row in self.buildings:
             for building in row:
                 # Check if inside view
@@ -34,9 +32,7 @@ class Game():
                 if (coords[0] >= -128 and coords[0] <= self.win.WIN_X + 128) and (
                     coords[1] >= -128 and coords[1] <= self.win.WIN_Y + 128
                 ):
-                    # Why does it take so long with high zoom level
                     building.draw(self.win.display, self.win.zoom, self.win.cart_to_iso([building.x, building.y]))
-                    i+=1
 
         
         pygame.display.flip()
@@ -64,7 +60,6 @@ class Game():
                 
 
     def update(self):
-
         self.draw()
         self.input()
 
