@@ -22,14 +22,14 @@ class Window():
 
     def move(self, keys):
         if keys[pygame.K_LEFT]:
-                self.win_x -=4*(self.zoom)/2
+                self.win_x -=2/(self.zoom)
         elif keys[pygame.K_RIGHT]:
-                self.win_x +=4*(self.zoom)/2
+                self.win_x +=2/(self.zoom)
 
         if keys[pygame.K_UP]:
-                self.win_y -=4*(self.zoom)/2
+                self.win_y -=2/(self.zoom)
         elif keys[pygame.K_DOWN]:
-                self.win_y += 4*(self.zoom)/2
+                self.win_y += 2/(self.zoom)
 
     def scroll(self,button):
         if button == 4 and self.zoom < self.MAX_ZOOM:

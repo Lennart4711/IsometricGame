@@ -11,7 +11,7 @@ class Game():
     def __init__(self):
         self.win = Window()
       
-        self.buildings = [[Farmland([x*32+32,y*32+32]) if x%4!=0 else Tower([x*32+32,y*32+32]) for x in range(6)]for y in range(12)]
+        self.buildings = [[Farmland([x*32+32,y*32+32], self.win.zoom) if x%4!=0 else Tower([x*32+32,y*32+32], self.win.zoom) for x in range(6)]for y in range(12)]
         self.buildings[5][5] = Void([10,10])
         self.buildings[10][0] = Void([10,10])
         self.buildings[11][0] = Void([10,10])
@@ -34,12 +34,10 @@ class Game():
                 if (coords[0] >= -128 and coords[0] <= self.win.WIN_X + 128) and (
                     coords[1] >= -128 and coords[1] <= self.win.WIN_Y + 128
                 ):
-                    start = time.time()
                     # Why does it take so long with high zoom level
                     building.draw(self.win.display, self.win.zoom, self.win.cart_to_iso([building.x, building.y]))
                     i+=1
 
-                    print(time.time()-start)
         
         pygame.display.flip()
 
@@ -62,7 +60,7 @@ class Game():
             for building in row:
                 x,y = self.win.iso_to_cart(pygame.mouse.get_pos())
                 # Offset of 0*5 or 1*5, depends on condition
-                building.offset = (building.x>x>building.x-32 and building.y>y>building.y-32)*5
+                building.offset = (building.x>x>building.x-32 and building.y>y>building.y-32)*3
                 
 
     def update(self):

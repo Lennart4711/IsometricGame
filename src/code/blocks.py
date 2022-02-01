@@ -5,28 +5,23 @@ import pygame
 path = "src/assets/blocks/"
 
 class Void(Sprite):
-    def __init__(self,pos):
-        super().__init__(pos)
-        self.img = pygame.image.load(path+'void.png').convert()
-
+    def __init__(self,pos, zoom):
+        super().__init__(pos, pygame.image.load(path+'void.png').convert(), zoom)
+    
 class Grass(Sprite):
-    def __init__(self,pos):
-        super().__init__(pos)
-        self.img = pygame.image.load(path+'default_grass.png').convert()
+    def __init__(self,pos, zoom):
+        super().__init__(pos, pygame.image.load(path+'default_grass.png').convert(), zoom)
 
 class Farmland(Sprite):
-    def __init__(self,pos):
-        super().__init__(pos)
-        self.img = pygame.image.load(path+'farmland.png').convert()
+    def __init__(self,pos, zoom):
+        super().__init__(pos, pygame.image.load(path+'farmland.png').convert(), zoom)
 
 class Void(Sprite):
-    def __init__(self,pos):
-        super().__init__(pos)
-        self.img = pygame.image.load(path+'void.png').convert()
+    def __init__(self,pos, zoom=0):
+        super().__init__(pos, pygame.image.load(path+'void.png').convert(), zoom)
 
 class Tower(Sprite):
-    def __init__(self,pos):
-        super().__init__(pos)
-        self.img = pygame.image.load(path+'higher.png').convert()
+    def __init__(self,pos, zoom):
+        super().__init__(pos, pygame.image.load(path+'higher.png').convert(), zoom)
 
 
