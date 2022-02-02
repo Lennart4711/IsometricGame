@@ -8,7 +8,8 @@ class Window():
         self.MAX_ZOOM = 4
         self.WIN_X = 1000
         self.WIN_Y = 1000
-        self.display = pygame.display.set_mode((self.WIN_X, self.WIN_Y))
+        self.input_width = 600
+        self.display = pygame.display.set_mode((self.WIN_X+self.input_width, self.WIN_Y))
         pygame.display.set_caption("CaMS")
         self.quit = False
 
@@ -22,20 +23,21 @@ class Window():
 
     def move(self, keys):
         if keys[pygame.K_LEFT]:
-                self.win_x -=2/(self.zoom)
+                self.win_x -=4/(self.zoom)
         elif keys[pygame.K_RIGHT]:
-                self.win_x +=2/(self.zoom)
+                self.win_x +=4/(self.zoom)
 
         if keys[pygame.K_UP]:
-                self.win_y -=2/(self.zoom)
+                self.win_y -=4/(self.zoom)
         elif keys[pygame.K_DOWN]:
-                self.win_y += 2/(self.zoom)
+                self.win_y += 4/(self.zoom)
 
     def scroll(self,button):
-        if button == 4 and self.zoom < self.MAX_ZOOM:
-            self.resize(1.1, self.screen_to_world(pygame.mouse.get_pos()))
-        elif button == 5 and self.zoom > self.MIN_ZOOM:
-            self.resize(0.9, self.screen_to_world(pygame.mouse.get_pos()))    
+        if(pygame.mouse.get_pos()[0]<1000):
+            if button == 4 and self.zoom < self.MAX_ZOOM:
+                self.resize(1.1, self.screen_to_world(pygame.mouse.get_pos()))
+            elif button == 5 and self.zoom > self.MIN_ZOOM:
+                self.resize(0.9, self.screen_to_world(pygame.mouse.get_pos()))    
 
     def screen_to_world(self, pos):
         x = pos[0]/self.zoom+self.win_x

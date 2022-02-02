@@ -23,7 +23,8 @@ class Game():
         self.buildings[11][2] = Void([10,10])
 
     def draw(self):
-        self.win.display.fill((125,124, 110))
+        self.win.display.fill((40,45, 45))
+
 
         for row in self.buildings:
             for building in row:
@@ -33,7 +34,7 @@ class Game():
                     coords[1] >= -128 and coords[1] <= self.win.WIN_Y + 128
                 ):
                     building.draw(self.win.display, self.win.zoom, self.win.cart_to_iso([building.x, building.y]))
-
+        pygame.draw.rect(self.win.display, (25,25,25), (self.win.WIN_X, 0, 600,self.win.WIN_Y), )
         
         pygame.display.flip()
 
