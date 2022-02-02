@@ -3,4 +3,7 @@
 - Develop game idea
 - Grab camera with mouse
 - Smooth scrolling
+- Map file/ format
+
+## Finished
 - Figure out, why zoomed in frames take exponentially long (pygame problem maybe)
