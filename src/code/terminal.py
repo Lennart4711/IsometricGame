@@ -3,12 +3,15 @@ pygame.font.init()
 class Terminal():
     def __init__(self, win):
         self.history = []
+        self.history_surface = []
         self.myfont = pygame.font.SysFont('awdas', 30)
         self.dollar = self.myfont.render('$', True, (200, 200, 200))
         self.active = False
         self.input_box = pygame.Rect(win.WIN_X+25, win.WIN_Y-40, 600,60)
         self.text = ""
         self.inputsurface  = self.myfont.render(self.text, True, (200, 200, 200))
+        self.command_list = ["mv", "clear", "touch", "cat", "help"]
+        self.unknown = self.myfont.render('Unknown command - type "help" for help', True, (200, 200, 200))
 
         
     def draw(self,win):
@@ -17,11 +20,16 @@ class Terminal():
         pygame.draw.rect(win.display, (120,120,120) if self.active else (60,60,60), (win.WIN_X, win.WIN_Y-60, 600,60),5) # Input-Border
         win.display.blit(self.dollar,(win.WIN_X+10,win.WIN_Y-40)) # $ sign
         self.inputsurface  = self.myfont.render(self.text, True, (200, 200, 200))
-        
+
         win.display.blit(self.inputsurface, (self.input_box.x, self.input_box.y))
-        for i, command in enumerate(self.history):
+        y = 20
+        for command in self.history:
             textsurface  = self.myfont.render("> "+command, True, (200, 200, 200))
-            win.display.blit(textsurface,(win.WIN_X+10,20+i*30)) 
+            win.display.blit(textsurface,(win.WIN_X+10,y))
+            y += 30
+            if command != "" and command.partition(' ')[0] not in self.command_list:
+                win.display.blit(self.unknown,(win.WIN_X+10,y))
+                y+=30
 
             
         
@@ -35,11 +43,12 @@ class Terminal():
             return
         if self.active:
             if event.key == pygame.K_RETURN:
-                print(self.text)
                 self.history.append(self.text)
                 if self.text == "clear":
                     self.history = []
                 self.text = ''
+                if len(self.history)>=15:
+                    del self.history[0]
 
             elif event.key == pygame.K_BACKSPACE:
                 self.text = self.text[:-1]
