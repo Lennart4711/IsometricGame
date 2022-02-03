@@ -1,17 +1,19 @@
 import pygame
 from terminal import Terminal
+
 class Window():
     def __init__(self):
-        self.fullscreen = True
+        self.fullscreen = False
         self.win_x = 0
         self.win_y = 0
         self.zoom = 3
-        self.MIN_ZOOM = 1
+        self.MIN_ZOOM = 1.5
         self.MAX_ZOOM = 4
         self.input_width = 600
-        self.WIN_X = 2550-self.input_width
-        self.WIN_Y = 1440
-        self.display = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+        self.WIN_X = 2700-self.input_width
+        self.WIN_Y = 1100
+        
+        self.display = pygame.display.set_mode((self.WIN_X+self.input_width,self.WIN_Y))
         pygame.display.set_caption("IsoGame")
         self.quit = False
         self.terminal = Terminal(self)

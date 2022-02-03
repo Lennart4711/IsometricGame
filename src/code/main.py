@@ -6,25 +6,26 @@ pygame.init()
 from blocks import *
 from window import Window
 import time
+import math
 
 class Game():
     def __init__(self):
         self.win = Window()
+        self.clock = pygame.time.Clock()
         # The position of a building in the list determines its drawing priority
         self.buildings = [[Farmland([x*32+32,y*32+32], self.win.zoom) if x%4!=0 else Tower([x*32+32,y*32+32], self.win.zoom) for x in range(6)]for y in range(12)]
-        self.buildings[5][5] = Void([10,10])
-        self.buildings[10][0] = Void([10,10])
-        self.buildings[11][0] = Void([10,10])
-        self.buildings[9][1] = Void([10,10])
-        self.buildings[10][1] = Void([10,10])
-        self.buildings[11][1] = Void([10,10])
-        self.buildings[9][2] = Void([10,10])
-        self.buildings[10][2] = Void([10,10])
-        self.buildings[11][2] = Void([10,10])
+        self.buildings[5][5] = Void([5*32+32,5*32+32], self.win.zoom)
+        self.buildings[10][0] = Void([10,10], self.win.zoom)
+        self.buildings[11][0] = Void([10,10], self.win.zoom)
+        self.buildings[9][1] = Void([10,10], self.win.zoom)
+        self.buildings[10][1] = Void([10,10], self.win.zoom)
+        self.buildings[11][1] = Void([10,10], self.win.zoom)
+        self.buildings[9][2] = Void([10,10], self.win.zoom)
+        self.buildings[10][2] = Void([10,10], self.win.zoom)
+        self.buildings[11][2] = Void([10,10], self.win.zoom)
 
     def draw(self):
         self.win.display.fill((40,45, 45))
-
 
         for row in self.buildings:
             for building in row:
@@ -49,7 +50,6 @@ class Game():
                 self.win.start_drag(event.button)
             if(event.type == pygame.MOUSEBUTTONUP):
                 self.win.end_drag(event.button)
-
             self.win.terminal.terminal_input(event)  
         self.win.mouse_movement()
         
@@ -71,12 +71,19 @@ class Game():
             for building in row:
                 x,y = self.win.iso_to_cart(pygame.mouse.get_pos())
                 # Offset of 0*5 or 1*5, depends on condition
-                building.offset = (building.x>x>building.x-32 and building.y>y>building.y-32)*3
-                
+                if (building.x>x>building.x-32 and building.y>y>building.y-32):
+                    building.offset = 3
+
+    def buildings_logic(self):
+        for row in self.buildings:
+            for building in row:  
+                building.update()
 
     def update(self):
-        self.draw()
         self.input()
+        self.buildings_logic()
+        self.draw()
+        self.clock.tick(60)
 
         
     def run(self):
