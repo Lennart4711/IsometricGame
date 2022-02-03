@@ -45,13 +45,24 @@ class Game():
             if(event.type == pygame.MOUSEBUTTONDOWN):
                 self.win.scroll(event.button)
                 self.win.terminal.terminal_active(event)
+
+                self.win.start_drag(event.button)
+            if(event.type == pygame.MOUSEBUTTONUP):
+                self.win.end_drag(event.button)
+
             self.win.terminal.terminal_input(event)  
-            
+        self.win.mouse_movement()
+        
                 
         #---Key-dependent---   
         self.highlight()
         keys = pygame.key.get_pressed() 
         self.win.move(keys)
+        if keys[pygame.K_0]:
+            self.win.win_x = 0
+            self.win.win_y = 0
+        if keys[pygame.K_ESCAPE]:
+            self.win.quit = True
         
 
     def highlight(self):

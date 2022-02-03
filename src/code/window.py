@@ -7,13 +7,16 @@ class Window():
         self.zoom = 3
         self.MIN_ZOOM = 1
         self.MAX_ZOOM = 4
-        self.WIN_X = 1000
-        self.WIN_Y = 1000
         self.input_width = 600
-        self.display = pygame.display.set_mode((self.WIN_X+self.input_width, self.WIN_Y))
-        pygame.display.set_caption("CaMS")
+        self.WIN_X = 2550-self.input_width
+        self.WIN_Y = 1440
+        self.display = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+        pygame.display.set_caption("IsoGame")
         self.quit = False
         self.terminal = Terminal(self)
+        #self.box = pygame.Rect(0, 0, self.WIN_X,self.WIN_Y)
+        self.drag_pos = (0,0)
+        self.started = False
 
     def resize(self, factor, before):
         self.zoom *= factor
@@ -34,8 +37,24 @@ class Window():
         elif keys[pygame.K_DOWN]:
                 self.win_y += 4/(self.zoom)
 
+    def start_drag(self, button):
+        if button == 1 and not self.started and pygame.mouse.get_pos()[0]<self.WIN_X:
+            self.drag_pos = pygame.mouse.get_pos()
+            self.started = True
+    
+    def end_drag(self, button):
+        if button == 1 and self.started:
+            self.started = False
+    
+    def mouse_movement(self):
+        if self.started:
+            self.win_x += (self.drag_pos[0]-pygame.mouse.get_pos()[0])/self.zoom
+            self.win_y += (self.drag_pos[1]-pygame.mouse.get_pos()[1])/self.zoom
+            self.drag_pos = pygame.mouse.get_pos()
+
+        
     def scroll(self,button):
-        if(pygame.mouse.get_pos()[0]<1000):
+        if(pygame.mouse.get_pos()[0]<self.WIN_X):
             if button == 4 and self.zoom < self.MAX_ZOOM:
                 self.resize(1.1, self.screen_to_world(pygame.mouse.get_pos()))
             elif button == 5 and self.zoom > self.MIN_ZOOM:
