@@ -63,7 +63,8 @@ class Game():
             self.win.win_y = 0
         if keys[pygame.K_ESCAPE]:
             self.win.quit = True
-        
+        if keys[pygame.K_F11]:
+            self.win.toggle_fullscreen()
 
     def highlight(self):
         for row in self.buildings:

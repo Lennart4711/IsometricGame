@@ -2,6 +2,7 @@ import pygame
 from terminal import Terminal
 class Window():
     def __init__(self):
+        self.fullscreen = True
         self.win_x = 0
         self.win_y = 0
         self.zoom = 3
@@ -17,6 +18,15 @@ class Window():
         #self.box = pygame.Rect(0, 0, self.WIN_X,self.WIN_Y)
         self.drag_pos = (0,0)
         self.started = False
+
+    def toggle_fullscreen(self):
+        if self.fullscreen:
+            self.fullscreen = False
+            self.display = pygame.display.set_mode((self.WIN_X+self.input_width,self.WIN_Y))
+        else:
+            self.fullscreen = True
+            self.display = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+
 
     def resize(self, factor, before):
         self.zoom *= factor
