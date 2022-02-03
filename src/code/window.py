@@ -1,4 +1,5 @@
 import pygame
+from terminal import Terminal
 class Window():
     def __init__(self):
         self.win_x = 0
@@ -12,6 +13,7 @@ class Window():
         self.display = pygame.display.set_mode((self.WIN_X+self.input_width, self.WIN_Y))
         pygame.display.set_caption("CaMS")
         self.quit = False
+        self.terminal = Terminal(self)
 
     def resize(self, factor, before):
         self.zoom *= factor
@@ -62,3 +64,6 @@ class Window():
             (2*y+x)*0.5,
             (2*y-x)*0.5
         ]
+
+    def draw_terminal(self):
+        self.terminal.draw(self)

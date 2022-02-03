@@ -34,8 +34,7 @@ class Game():
                     coords[1] >= -128 and coords[1] <= self.win.WIN_Y + 128
                 ):
                     building.draw(self.win.display, self.win.zoom, self.win.cart_to_iso([building.x, building.y]))
-        pygame.draw.rect(self.win.display, (25,25,25), (self.win.WIN_X, 0, 600,self.win.WIN_Y), )
-        
+        self.win.draw_terminal()
         pygame.display.flip()
 
     def input(self):
@@ -45,10 +44,13 @@ class Game():
                 self.win.quit = True
             if(event.type == pygame.MOUSEBUTTONDOWN):
                 self.win.scroll(event.button)
+                self.win.terminal.terminal_active(event)
+            self.win.terminal.terminal_input(event)  
+            
                 
         #---Key-dependent---   
         self.highlight()
-        keys = pygame.key.get_pressed()   
+        keys = pygame.key.get_pressed() 
         self.win.move(keys)
         
 
