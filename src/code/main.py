@@ -13,28 +13,19 @@ class Game():
         self.win = Window()
         self.clock = pygame.time.Clock()
         # The position of a building in the list determines its drawing priority
-        self.buildings = [[Farmland([x*32+32,y*32+32], self.win.zoom) if x%4!=0 else Tower([x*32+32,y*32+32], self.win.zoom) for x in range(6)]for y in range(12)]
-        self.buildings[5][5] = Void([5*32+32,5*32+32], self.win.zoom)
-        self.buildings[10][0] = Void([10,10], self.win.zoom)
-        self.buildings[11][0] = Void([10,10], self.win.zoom)
-        self.buildings[9][1] = Void([10,10], self.win.zoom)
-        self.buildings[10][1] = Void([10,10], self.win.zoom)
-        self.buildings[11][1] = Void([10,10], self.win.zoom)
-        self.buildings[9][2] = Void([10,10], self.win.zoom)
-        self.buildings[10][2] = Void([10,10], self.win.zoom)
-        self.buildings[11][2] = Void([10,10], self.win.zoom)
-
+        self.buildings = [[[Farmland([x*32+32,y*32+32], self.win.zoom) if x%4!=0 else Tower([x*32+32,y*32+32], self.win.zoom) for x in range(6)]for y in range(12) ]for z in range(3)]
+        self.buildings[1][11][5] = Void([0,0],self.win.zoom)
     def draw(self):
         self.win.display.fill((40,45, 45))
-
-        for row in self.buildings:
-            for building in row:
-                # Check if inside view
-                coords = self.win.cart_to_iso([building.x, building.y])
-                if (coords[0] >= -128 and coords[0] <= self.win.WIN_X + 128) and (
-                    coords[1] >= -128 and coords[1] <= self.win.WIN_Y + 128
-                ):
-                    building.draw(self.win.display, self.win.zoom, self.win.cart_to_iso([building.x, building.y]))
+        for i,col in enumerate(self.buildings):
+            for j, row in enumerate(col):
+                for h, building in enumerate(row):
+                    # Check if inside view
+                    coords = self.win.cart_to_iso([building.x, building.y])
+                    if (coords[0] >= -128 and coords[0] <= self.win.WIN_X + 128) and (
+                        coords[1] >= -128 and coords[1] <= self.win.WIN_Y + 128
+                    ):
+                        building.draw(self.win.display, self.win.zoom, self.win.cart_to_iso([building.x-i*26, building.y-i*26]), row,i)
         self.win.draw_terminal()
         pygame.display.flip()
 
@@ -67,17 +58,19 @@ class Game():
             self.win.toggle_fullscreen()
 
     def highlight(self):
-        for row in self.buildings:
-            for building in row:
-                x,y = self.win.iso_to_cart(pygame.mouse.get_pos())
-                # Offset of 0*5 or 1*5, depends on condition
-                if (building.x>x>building.x-32 and building.y>y>building.y-32):
-                    building.offset = 3
+        for col in self.buildings:
+            for row in col:
+                for building in row:
+                    x,y = self.win.iso_to_cart(pygame.mouse.get_pos())
+                    # Offset of 0*5 or 1*5, depends on condition
+                    if (building.x>x>building.x-32 and building.y>y>building.y-32):
+                        building.offset = 3
 
     def buildings_logic(self):
-        for row in self.buildings:
-            for building in row:  
-                building.update()
+        for col in self.buildings:
+            for row in col:
+                for building in row:  
+                    building.update()
 
     def update(self):
         self.input()

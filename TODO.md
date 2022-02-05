@@ -6,6 +6,8 @@
 - Map file/ format
 - Terminal commands
 - Shadow size
+- 3d shadow 
+- 3d tile selection
 
 ## Finished
 - Figure out, why zoomed in frames take exponentially long (pygame problem maybe)

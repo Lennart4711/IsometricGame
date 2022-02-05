@@ -15,26 +15,23 @@ class Sprite():
         self.shadow = pygame.transform.scale(self.shadow_img, ((self.shadow_img.get_width()*zoom),(self.shadow_img.get_height()*zoom)))
 
 
-    def draw(self, win, zoom, pos):
+    def draw(self, win, zoom, pos, row, height):
         if zoom!=self.last_zoom:
             self.sprite = pygame.transform.scale(self.img, ((self.img.get_width()*zoom),(self.img.get_height()*zoom)))
             self.shadow = pygame.transform.scale(self.shadow_img, ((self.shadow_img.get_width()*zoom),(self.shadow_img.get_height()*zoom)))
-            
-            
             self.last_zoom = zoom
-      
-        win.blit(
-                    self.shadow,
-                    (#pos
-                        #self.cartesian_to_isometric(((self.x-wx)*zoom-64*zoom, (self.y-wy)*zoom-64*zoom))
-                        pos[0]-32*zoom,
-                        pos[1]-(self.offset*zoom)-32*zoom+32*zoom
+
+        if height == 0:
+            win.blit(
+                        self.shadow,
+                        (#pos
+                            pos[0]-32*zoom,
+                            pos[1]#-(self.offset*zoom)
+                        )
                     )
-                )
         win.blit(
                     self.sprite,
                     (#pos
-                        #self.cartesian_to_isometric(((self.x-wx)*zoom-64*zoom, (self.y-wy)*zoom-64*zoom))
                         pos[0]-32*zoom,
                         pos[1]-(self.offset*zoom)-32*zoom-self.img.get_height()*zoom+64*zoom
                     )
