@@ -8,24 +8,70 @@ from window import Window
 import time
 import math
 
+import cProfile, pstats, io
+
+
+
+def profile(fnc):
+    
+    """A decorator that uses cProfile to profile a function"""
+    
+    def inner(*args, **kwargs):
+        
+        pr = cProfile.Profile()
+        pr.enable()
+        retval = fnc(*args, **kwargs)
+        pr.disable()
+        s = io.StringIO()
+        sortby = 'cumulative'
+        ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+        ps.print_stats()
+        print(s.getvalue())
+        return retval
+
+    return inner
+
 class Game():
     def __init__(self):
         self.win = Window()
         self.clock = pygame.time.Clock()
         # The position of a building in the list determines its drawing priority
-        self.buildings = [[[Farmland([x*32+32,y*32+32], self.win.zoom) if x%4!=0 else Tower([x*32+32,y*32+32], self.win.zoom) for x in range(6)]for y in range(12) ]for z in range(3)]
+        self.buildings = [
+            [
+                [
+                    Farmland([x * 32 + 32, y * 32 + 32], self.win.zoom)
+                    if x % 4 != 0
+                    else Tower([x * 32 + 32, y * 32 + 32], self.win.zoom)
+                    for x in range(6) # x-axis
+                ]
+                for y in range(12) # y-axis
+            ]
+            for _ in range(3) # Height
+        ]
+
         self.buildings[1][11][5] = Void([0,0],self.win.zoom)
+        self.buildings[0][11][5] = Void([0,0],self.win.zoom)
+        self.buildings[1][11][4] = Void([0,0],self.win.zoom)
+        self.buildings[1][11][3] = Void([0,0],self.win.zoom)
+        self.buildings[2][11][3] = Void([0,0],self.win.zoom)
+
+        print(self.buildings[1][11][2].x,self.buildings[1][11][2].y)
+        print(self.buildings[2][11][2].x,self.buildings[2][11][2].y)
+        
+
+
+
     def draw(self):
         self.win.display.fill((40,45, 45))
         for i,col in enumerate(self.buildings):
-            for j, row in enumerate(col):
-                for h, building in enumerate(row):
+            for row in col:
+                for building in row:
                     # Check if inside view
                     coords = self.win.cart_to_iso([building.x, building.y])
                     if (coords[0] >= -128 and coords[0] <= self.win.WIN_X + 128) and (
                         coords[1] >= -128 and coords[1] <= self.win.WIN_Y + 128
                     ):
-                        building.draw(self.win.display, self.win.zoom, self.win.cart_to_iso([building.x-i*26, building.y-i*26]), row,i)
+                        building.draw(self.win.display, self.win.zoom, self.win.cart_to_iso([building.x-i*26, building.y-i*26]),i)
         self.win.draw_terminal()
         pygame.display.flip()
 
@@ -58,20 +104,24 @@ class Game():
             self.win.toggle_fullscreen()
 
     def highlight(self):
-        for col in self.buildings:
+        c = 0
+        for i, col in enumerate(self.buildings[::-1]):
             for row in col:
                 for building in row:
                     x,y = self.win.iso_to_cart(pygame.mouse.get_pos())
-                    # Offset of 0*5 or 1*5, depends on condition
                     if (building.x>x>building.x-32 and building.y>y>building.y-32):
                         building.offset = 3
+                        c += 1
+                        print(c)
+                        
+                        
 
     def buildings_logic(self):
         for col in self.buildings:
             for row in col:
                 for building in row:  
                     building.update()
-
+    @profile
     def update(self):
         self.input()
         self.buildings_logic()

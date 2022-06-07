@@ -15,7 +15,7 @@ class Sprite():
         self.shadow = pygame.transform.scale(self.shadow_img, ((self.shadow_img.get_width()*zoom),(self.shadow_img.get_height()*zoom)))
 
 
-    def draw(self, win, zoom, pos, row, height):
+    def draw(self, win, zoom, pos, height):
         if zoom!=self.last_zoom:
             self.sprite = pygame.transform.scale(self.img, ((self.img.get_width()*zoom),(self.img.get_height()*zoom)))
             self.shadow = pygame.transform.scale(self.shadow_img, ((self.shadow_img.get_width()*zoom),(self.shadow_img.get_height()*zoom)))

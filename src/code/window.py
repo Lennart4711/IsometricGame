@@ -78,8 +78,8 @@ class Window():
         return [x,y]
 
     def world_to_screen(self, pos):
-        x = (pos[0]-self.win_x)*self.win.zoom
-        y = (pos[1]-self.win_y)*self.win.zoom
+        x = (pos[0]-self.win_x)*self.zoom
+        y = (pos[1]-self.win_y)*self.zoom
         return [x,y]
 
     def cart_to_iso(self,cartesian):
